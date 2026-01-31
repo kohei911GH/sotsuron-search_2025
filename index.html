@@ -162,10 +162,13 @@ function render(){
   const allFields = document.getElementById("optAll").checked;
 
   const terms = q ? q.split(/\s+/).filter(Boolean) : [];
-  const hits = DATA.filter(rec => matchRecord(rec, terms, ignoreCase, andMode, allFields));
+  // 初期状態（検索語なし）は結果を空にする
+  const hits = terms.length===0 ? [] : DATA.filter(rec => matchRecord(rec, terms, ignoreCase, andMode, allFields));
 
   document.getElementById("stats").textContent =
-    `ヒット: ${hits.length} / 総件数: ${DATA.length} / お気に入り: ${favorites.length}`;
+    (terms.length===0
+      ? `検索語を入力してください（総件数: ${DATA.length} / お気に入り: ${favorites.length}）`
+      : `ヒット: ${hits.length} / 総件数: ${DATA.length} / お気に入り: ${favorites.length}`);
 
   renderCards(hits, terms);
   renderTable(hits, terms);
